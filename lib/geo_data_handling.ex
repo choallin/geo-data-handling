@@ -15,7 +15,7 @@ defmodule GeoDataHandling do
   def create_bounding_box(geo_coodrinates) do
     # To find the bbox for 2 given points I reorder it to
     # NESW representation
-    [current_point | tail] = geo_coodrinates
+    [current_point | tail] = List.flatten(geo_coodrinates)
     first_lat = elem(current_point, 1)
     first_lon = elem(current_point, 0)
     [current_point | tail] = tail
@@ -44,8 +44,8 @@ defmodule GeoDataHandling do
 
   defp create_bounding_box(geo_coodrinates, bbox) do
     [current_point | tail] = geo_coodrinates
-    first_lat = List.last(current_point)
-    first_lon = List.first(current_point)
+    first_lat = elem(current_point, 1)
+    first_lon = elem(current_point, 0)
     {north, _} = List.pop_at(bbox, 0)
     {south, _} = List.pop_at(bbox, 2)
     {west, _} = List.pop_at(bbox, 3)

@@ -13,7 +13,9 @@ defmodule GeoDataHandlingTest do
   end
 
   test "finds the bounding box" do
-    assert GeoDataHandling.create_bounding_box([{120.99287, 14.75659}, {120.99206, 14.756699999999999}]) ==
+    assert GeoDataHandling.create_bounding_box([
+        {120.99287, 14.75659}, {120.99206, 14.756699999999999}
+      ]) ==
       [14.75659, 120.99206, 14.756699999999999, 120.99287]
   end
 
