@@ -16,11 +16,11 @@ defmodule GeoDataHandling do
     # To find the bbox for 2 given points I reorder it to
     # NESW representation
     [current_point | tail] = geo_coodrinates
-    first_lat = List.last(current_point)
-    first_lon = List.first(current_point)
+    first_lat = elem(current_point, 1)
+    first_lon = elem(current_point, 0)
     [current_point | tail] = tail
-    second_lat = List.last(current_point)
-    second_lon = List.first(current_point)
+    second_lat = elem(current_point,1)
+    second_lon = elem(current_point, 0)
     bbox = [
       min(first_lat, second_lat),
       min(first_lon, second_lon),
@@ -57,6 +57,29 @@ defmodule GeoDataHandling do
       max(first_lon, west)
     ]
     create_bounding_box(tail, bbox)
+  end
+
+  def match_coordinates_to_bounding_boxes(bounding_boxes, coordinates) do
+    # We iterate over the bounding boxes we have since it
+    # is more likely that we have more coordinates than bboxes
+    Enum.reduce(bounding_boxes, [], fn(box, memo) ->
+        matched_coordinates = Enum.filter(coordinates, fn(coordinate) ->
+          is_coordinate_in_bounding_box?(box, coordinate)
+        end
+        )
+        [%{box: box, coordinates: matched_coordinates} | memo]
+      end
+    )
+  end
+
+  defp is_coordinate_in_bounding_box?(bbox, coordinate) do
+    {north, _} = List.pop_at(bbox, 0)
+    {south, _} = List.pop_at(bbox, 2)
+    {west, _} = List.pop_at(bbox, 3)
+    {east, _} = List.pop_at(bbox, 1)
+    lat = List.last(coordinate)
+    lon = List.first(coordinate)
+    north < lat && south > lat && east < lon && west > lon
   end
 
 end
