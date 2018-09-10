@@ -47,9 +47,9 @@ defmodule GeoDataHandling do
     first_lat = List.last(current_point)
     first_lon = List.first(current_point)
     {north, _} = List.pop_at(bbox, 0)
-    {south, _} = List.pop_at(bbox, 1)
-    {west, _} = List.pop_at(bbox, 2)
-    {east, _} = List.pop_at(bbox, 3)
+    {south, _} = List.pop_at(bbox, 2)
+    {west, _} = List.pop_at(bbox, 3)
+    {east, _} = List.pop_at(bbox, 1)
     bbox = [
       min(first_lat, north),
       min(first_lon, east),
