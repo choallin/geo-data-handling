@@ -33,7 +33,7 @@ defmodule GeoDataHandlingTest do
     ]
   end
 
-  test "finds out it a coordinate is in a given box" do
+  test "finds out if a coordinate is in a given box" do
     assert GeoDataHandling.is_coordinate_in_bounding_box?(
       [14.75808, 120.99160999999998, 14.758099999999999, 120.99182999999998],
       [120.9917,14.758089]
