@@ -12,9 +12,9 @@ defmodule GeoDataHandling do
   def create_pairs(file_path) do
     file_path
     |> Path.expand(__DIR__)
-    |> File.stream!
+    |> File.stream!()
     |> CSV.decode!(headers: true)
-    |> Enum.map(&( { String.to_float(&1["lon"]) , String.to_float(&1["lat"]) } ))
+    |> Enum.map(&{String.to_float(&1["lon"]), String.to_float(&1["lat"])})
     |> Enum.chunk_every(2)
   end
 
@@ -31,14 +31,16 @@ defmodule GeoDataHandling do
     first_lat = elem(current_point, 1)
     first_lon = elem(current_point, 0)
     [current_point | tail] = tail
-    second_lat = elem(current_point,1)
+    second_lat = elem(current_point, 1)
     second_lon = elem(current_point, 0)
+
     bbox = [
       min(first_lat, second_lat),
       min(first_lon, second_lon),
       max(first_lat, second_lat),
       max(first_lon, second_lon)
     ]
+
     # After creation of the first box we
     # recursivly call the private functions
     # to find the min/max of each point and compare it
@@ -67,12 +69,14 @@ defmodule GeoDataHandling do
     {south, _} = List.pop_at(bbox, 2)
     {west, _} = List.pop_at(bbox, 3)
     {east, _} = List.pop_at(bbox, 1)
+
     bbox = [
       min(first_lat, north),
       min(first_lon, east),
       max(first_lat, south),
       max(first_lon, west)
     ]
+
     create_bounding_box(tail, bbox)
   end
 
@@ -100,14 +104,14 @@ defmodule GeoDataHandling do
 
     # We iterate over the bounding boxes we have since it
     # is more likely that we have more coordinates than bboxes
-    Enum.reduce(bounding_boxes, [], fn(box, memo) ->
-        matched_coordinates = Enum.filter(coordinates, fn(coordinate) ->
+    Enum.reduce(bounding_boxes, [], fn box, memo ->
+      matched_coordinates =
+        Enum.filter(coordinates, fn coordinate ->
           is_coordinate_in_bounding_box?(box, coordinate)
-        end
-        )
-        [%{box: box, coordinates: matched_coordinates} | memo]
-      end
-    )
+        end)
+
+      [%{box: box, coordinates: matched_coordinates} | memo]
+    end)
   end
 
   @doc """
@@ -124,5 +128,4 @@ defmodule GeoDataHandling do
     lon = List.first(coordinate)
     north < lat && south > lat && east < lon && west > lon
   end
-
 end
