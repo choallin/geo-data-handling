@@ -1,6 +1,5 @@
 defmodule GeoDataHandlingTest do
   use ExUnit.Case
-  # doctest GeoDataHandling
 
   test "creates pairs" do
     assert Enum.take(GeoDataHandling.create_pairs("../pairs.csv"), 2) == [
@@ -32,5 +31,16 @@ defmodule GeoDataHandlingTest do
       %{box: [14.45659, 120.99206, 14.656699999999999, 121.287], coordinates: [[121.0039, 14.5157]]},
       %{box: [14.75659, 120.99206, 14.756699999999999, 120.99287],  coordinates: [[120.9921, 14.7566]]}
     ]
+  end
+
+  test "finds out it a coordinate is in a given box" do
+    assert GeoDataHandling.is_coordinate_in_bounding_box?(
+      [14.75808, 120.99160999999998, 14.758099999999999, 120.99182999999998],
+      [120.9917,14.758089]
+    ) == true
+    assert GeoDataHandling.is_coordinate_in_bounding_box?(
+      [14.75808, 120.99160999999998, 14.758099999999999, 120.99182999999998],
+      [120.9927,14.758089]
+    ) == false
   end
 end
